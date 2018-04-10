@@ -1,0 +1,33 @@
+apply plugin: 'base'
+
+task generator() {
+    doLast {
+        def generatedFileDir = file("$buildDir/generated")
+        generatedFileDir.mkdirs()
+        for (int i=0; i<10; i++) {
+            new File(generatedFileDir, "${i}.txt").text = i
+        }
+    }
+}
+
+task zip(type: Zip) {
+    dependsOn generator
+    from "$buildDir/generated"
+}
+
+task generator2() {
+    def generatedFileDir = file("$buildDir/generated2")
+    outputs.dir generatedFileDir
+    doLast {
+        generatedFileDir.mkdirs()
+        for (int i=0; i<10; i++) {
+            new File(generatedFileDir, "${i}.txt").text = i
+        }
+    }
+}
+
+task zip2(type: Zip) {
+    dependsOn generator2
+    from "$buildDir/generated2"
+}
+
